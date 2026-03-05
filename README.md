@@ -1,5 +1,7 @@
 <div align="center">
-  <img width="125px" src="assets/Havoc.png" />
+  <div style="display: flex; gap: 10px; align-items: center;">
+    <img width="125px" src="assets/Havoc.png" style="padding-right: 100px" />
+  </div>
   <h1>Havoc</h1>
   <br/>
 
