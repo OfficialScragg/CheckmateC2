@@ -14,4 +14,4 @@ Will add some info here as I go...
 
 but the idea is to use chess.com as a C2 channel for a custom implant and listener (everything else in Havoc will stay the same).
 
-This is just a fun project - obiously.
+This is just a fun project - obviously.
