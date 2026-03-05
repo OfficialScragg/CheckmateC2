@@ -1,6 +1,6 @@
 <div align="center">
   <div style="display: flex; gap: 10px; align-items: center;">
-    <img width="125px" src="assets/chessc2.png" style="padding-right: 100px" />
+    <img width="300px" src="assets/chessc2.png" style="padding-right: 100px" />
   </div>
   <h1>CheckmateC2</h1>
   <br/>
