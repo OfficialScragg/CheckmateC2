@@ -419,7 +419,7 @@ HTML_TEMPLATE = """
 
 def _pgns_to_boards(pgns: list) -> list:
     boards = []
-    for pgn in pgns:
+    for pgn in pgns[:100]:
         fen = extract_fen_from_pgn(pgn)
         if fen:
             svg = fen_to_svg(fen)

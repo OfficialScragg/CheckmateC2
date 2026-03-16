@@ -293,7 +293,7 @@ def register():
         "OS Build": "None",
         "Sleep": 1,
         "Process Name": "python",
-        "OS Version": str(platform.version())
+        "OS Version": "0.0.0.0"
     }
     
     # JSON → bytes
