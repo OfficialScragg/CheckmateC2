@@ -5,7 +5,7 @@
   <h1>CheckmateC2</h1>
   <br/>
 
-  <p><i>CheckmateC2 (Havoc) is a modern and malleable post-exploitation command and control framework, created by <a href="https://twitter.com/C5pider">@C5pider</a>.</i></p>
+  <p><i>CheckmateC2 is a custom agent and listener for the Havoc Framework (made by <a href="https://twitter.com/C5pider">@C5pider</a>) that communicates entirely through Chess.com game collections and analysis boards using Base5 and FEN for data encoding.</i></p>
   <br />
 
 </div>
